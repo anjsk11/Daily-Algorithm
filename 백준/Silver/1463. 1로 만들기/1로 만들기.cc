@@ -1,8 +1,36 @@
 #include <iostream>
-#include <algorithm>
 using namespace std;
 
 int cache[1000000];
+
+int getmin(int n) {
+    int min = 10000000;
+    int temp;
+
+    if(n == 1) 
+        return 0;
+    else if(cache[n] != 0)
+        return cache[n];
+
+    if(n % 3 == 0) {
+        temp = getmin(n / 3);
+        if(temp < min)
+            min = temp;
+    }
+
+    if(n % 2 == 0) {
+        temp = getmin(n / 2);
+        if(temp < min)
+            min = temp;
+    }
+
+    temp = getmin(n - 1);
+    if(temp < min)
+        min = temp;
+
+    cache[n] = min + 1;
+    return min + 1;
+}
 
 int main() {
     ios::sync_with_stdio(false);
@@ -10,17 +38,5 @@ int main() {
 
     int n;
     cin >> n;
-    
-    for(int i = 2; i <= n; i++) {
-        int temp1 = 1000000, temp2 = 1000000, temp3 = 1000000;
-        if(i % 3 == 0) 
-            temp1 = cache[i / 3];
-        if(i % 2 == 0) 
-            temp2 = cache[i / 2];
-        temp3 = cache[i - 1];
-
-        cache[i] = min({temp1, temp2, temp3}) + 1;
-    }
-
-    cout << cache[n];
+    cout << getmin(n);
 }
